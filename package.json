@@ -1,0 +1,31 @@
+{
+  "name": "machine-share",
+  "version": "0.0.1",
+  "description": "share docker machines with friendz",
+  "bin": {
+    "machine-share": "./cmd.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhurlow/machine-share.git"
+  },
+  "keywords": [
+    "docker-machine",
+    "docker",
+    "export",
+    "import"
+  ],
+  "author": "Brian Hurlow",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bhurlow/machine-share/issues"
+  },
+  "homepage": "https://github.com/bhurlow/machine-share#readme",
+  "dependencies": {
+    "fstream": "^1.0.8",
+    "tar": "^2.2.1"
+  }
+}
