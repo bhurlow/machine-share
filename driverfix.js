@@ -1,4 +1,6 @@
-#! /usr/env/node
+#! /usr/bin/env node
+
+console.log('fixing driver..')
 
 var fs      = require('fs')
 var args    = process.argv.slice(2)

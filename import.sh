@@ -25,5 +25,6 @@ mkdir -p $HOME/.docker/machine/machines/$FILENAME
 cp -r /tmp/$FILENAME $HOME/.docker/machine/machines/
 
 # update the stupid raw driver
-./driverfix.js $FILENAME
+machine-driverfix $FILENAME
 
+echo "ok!"

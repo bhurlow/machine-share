@@ -4,7 +4,8 @@
   "description": "share docker machines with friendz",
   "bin": {
     "machine-export": "./export.sh",
-    "machine-import": "./import.sh"
+    "machine-import": "./import.sh",
+    "machine-driverfix": "./driverfix.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
