@@ -16,7 +16,8 @@ rm -rf /tmp/$NAME
 cp -r $HOME/.docker/machine/machines/$NAME /tmp/$NAME
 
 # stub out the host specific vars
-cat /tmp/$NAME/config.json | sed -e "s:$HOME:{{HOME}}:g" > /tmp/$NAME/config.json
+cat /tmp/$NAME/config.json | sed -e "s:$HOME:{{HOME}}:g" > /tmp/$NAME/config.json.stub
+mv /tmp/$NAME/config.json.stub /tmp/$NAME/config.json 
 
 # make a zip
 zip -r -j $NAME.zip /tmp/$NAME
