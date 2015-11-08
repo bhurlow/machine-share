@@ -1,6 +1,6 @@
 {
   "name": "machine-share",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "share docker machines with friendz",
   "bin": {
     "machine-export": "./export.sh",
