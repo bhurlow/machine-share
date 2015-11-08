@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "share docker machines with friendz",
   "bin": {
-    "machine-share": "./cmd.js"
+    "machine-export": "./export.sh",
+    "machine-import": "./import.sh"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

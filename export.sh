@@ -1,6 +1,12 @@
 #! /bin/bash 
 
 NAME=$1
+
+if [ -z "$NAME" ]; then 
+  echo "machine-export <machine-name>"
+  exit 1
+fi
+
 echo "exporting $NAME"
 
 # stay clean
