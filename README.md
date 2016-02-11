@@ -13,14 +13,14 @@ npm install -g machine-share
 ## exporting machines
 
 ```
-machine-share export <machine-name>
+machine-export <machine-name>
 >> exported to <machine-name>.tar 
 ```
 
 ## importing machines
 
 ```
-machine-share import <machine-name>.tar
+machine-import <machine-name>.tar
 >> imported
 ```
 
