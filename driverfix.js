@@ -13,16 +13,19 @@ config = config.toString()
 config = JSON.parse(config)
 
 var raw = config.RawDriver
-var decoded = new Buffer(raw, 'base64').toString()
-var driver = JSON.parse(decoded)
+
+if (raw) {
+    var decoded = new Buffer(raw, 'base64').toString()
+    var driver = JSON.parse(decoded)
 
 // update store path
-driver.StorePath = process.env.HOME + '/.docker/machine'
+    driver.StorePath = process.env.HOME + '/.docker/machine'
 
-var updatedBlob = new Buffer( JSON.stringify(driver)).toString('base64')
+    var updatedBlob = new Buffer(JSON.stringify(driver)).toString('base64')
 
 // update old config
-config.RawDriver = updatedBlob
+    config.RawDriver = updatedBlob
+}
 
 fs.writeFileSync(configPath, JSON.stringify(config))
 
