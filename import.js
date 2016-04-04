@@ -7,6 +7,7 @@ var path = require('path')
 var fse = require('fs.extra')
 var zip = require('node-zip')
 var util = require('./util')
+var mkdirp=require('mkdirp')
 
 var args = process.argv.slice(2)
 var machine = args[0]
@@ -16,7 +17,10 @@ if (!machine) {
 }
 
 var machine = machine.substring(0, machine.length - 4)
-var configDir = process.env.HOME + '/.docker/machine/machines/' + machine
+var configBase= process.env.HOME + '/.docker/machine/machines/'
+var configDir = configBase + machine
+
+mkdirp.sync(configBase)
 try {
     fs.statSync(configDir)
     console.log('that machine already exists')
@@ -42,7 +46,7 @@ function unzip() {
     for (var f in zip.files) {
         var file = zip.files[f]
         if (!file.dir) {
-            util.mkdir(path.dirname(tmp + file.name))
+            mkdirp.sync(path.dirname(tmp + file.name))
             fs.writeFileSync(tmp + file.name, file.asNodeBuffer())
         }
     }

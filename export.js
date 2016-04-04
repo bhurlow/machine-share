@@ -7,6 +7,7 @@ var path = require('path')
 var fse = require('fs.extra')
 var zip = require('node-zip')
 var util = require('./util')
+var mkdirp=require('mkdirp')
 
 var args = process.argv.slice(2)
 
@@ -21,7 +22,7 @@ fse.rmrfSync(tmp)
 
 var configDir = process.env.HOME + '/.docker/machine/machines/' + machine
 util.copyDir(configDir, tmp)
-fs.mkdirSync(tmp + 'certs')
+mkdirp.sync(tmp+'certs')
 
 processConfig()
 createZip()

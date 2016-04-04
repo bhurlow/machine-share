@@ -1,4 +1,5 @@
 var fs = require('fs')
+var mkdirp = require('mkdirp')
 
 exports.copy = function (from, to) {
     var file = fs.readFileSync(from)
@@ -6,7 +7,7 @@ exports.copy = function (from, to) {
 }
 
 exports.copyDir = function (from, to) {
-    exports.mkdir(to)
+    mkdirp.sync(to)
     var files = fs.readdirSync(from)
     for (var i = 0; i < files.length; i++) {
         var file = from + '/' + files[i]
