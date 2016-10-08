@@ -9,6 +9,9 @@ var fse = require('fs.extra')
 var zip = require('node-zip')
 var util = require('./util')
 
+var DM_CERTS_DIR  = '/.docker/machine/certs/'
+var DM_MACHINE_DIR = '/.docker/machine/machines'
+
 var args = process.argv.slice(2)
 var machine = args[0]
 if (!machine) {
@@ -17,7 +20,7 @@ if (!machine) {
 }
 
 var machine = machine.substring(0, machine.length - 4)
-var configDir = path.join(process.env.HOME, '/.docker/machine/machines', machine)
+var configDir = path.join(process.env.HOME, DM_MACHINE_DIR, machine)
 try {
     fs.statSync(configDir)
     console.log('that machine already exists')
@@ -33,7 +36,7 @@ unzip()
 processConfig()
 
 util.copyDir(tmp, configDir)
-util.copyDir(path.join(tmp, 'certs'), path.join(process.env.HOME, '/.docker/machine/certs/', machine))
+util.copyDir(path.join(tmp, 'certs'), path.join(process.env.HOME, DM_CERTS_DIR, machine))
 // Fix file permissions for id_rsa key, if present
 util.permissions(path.join(configDir, 'id_rsa'), 0600)
 fse.rmrfSync(tmp)

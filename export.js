@@ -9,6 +9,9 @@ var fse = require('fs.extra')
 var zip = require('node-zip')
 var util = require('./util')
 
+var DM_CERTS_DIR  = '/.docker/machine/certs/'
+var DM_MACHINE_DIR = '/.docker/machine/machines'
+
 var args = process.argv.slice(2)
 
 var machine = args[0]
