@@ -4,9 +4,13 @@ console.log('exporting.')
 
 var fs = require('fs')
 var path = require('path')
+var os = require('os');
 var fse = require('fs.extra')
 var zip = require('node-zip')
 var util = require('./util')
+
+var DM_CERTS_DIR  = '/.docker/machine/certs/'
+var DM_MACHINE_DIR = '/.docker/machine/machines'
 
 var args = process.argv.slice(2)
 
@@ -16,28 +20,28 @@ if (!machine) {
     process.exit(1)
 }
 
-var tmp = '/tmp/' + machine + '/'
+var tmp = path.join(os.tmpdir(), machine);
 fse.rmrfSync(tmp)
 
-var configDir = process.env.HOME + '/.docker/machine/machines/' + machine
+var configDir = path.join(process.env.HOME, '/.docker/machine/machines', machine)
 util.copyDir(configDir, tmp)
-fs.mkdirSync(tmp + 'certs')
+fs.mkdirSync(path.join(tmp, 'certs'))
 
 processConfig()
 createZip()
 
 function processConfig() {
     var home = process.env['HOME']
-    var configName = tmp + 'config.json';
+    var configName = path.join(tmp, 'config.json');
     var configFile = fs.readFileSync(configName)
     var config = JSON.parse(configFile.toString())
 
     util.recurseJson(config, function (parent, key, value) {
         if (typeof value === 'string') {
-            if (util.startsWith(value, home + '/.docker/machine/certs/')) {
-                var name = value.substring(value.lastIndexOf('/') + 1)
-                util.copy(value, tmp + 'certs/' + name)
-                value = home + '/.docker/machine/certs/' + machine + '/' + name
+            if (util.startsWith(value, path.join(home, '/.docker/machine/certs/'))) {
+                var name = path.basename(value)
+                util.copy(value, path.join(tmp, 'certs', name))
+                value = path.join(home, '/.docker/machine/certs', machine, name)
             }
             value = value.replace(home, '{{HOME}}')
             parent[key] = value
