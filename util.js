@@ -36,3 +36,9 @@ exports.recurseJson = function (obj, func) {
         }
     }
 }
+
+exports.permissions = function (path, chmod) {
+    try {
+        fs.chmodSync(path, chmod)
+    } catch (e) {}
+}
