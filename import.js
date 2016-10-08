@@ -4,6 +4,7 @@ console.log('importing.')
 
 var fs = require('fs')
 var path = require('path')
+var os = require('os');
 var fse = require('fs.extra')
 var zip = require('node-zip')
 var util = require('./util')
@@ -16,7 +17,7 @@ if (!machine) {
 }
 
 var machine = machine.substring(0, machine.length - 4)
-var configDir = process.env.HOME + '/.docker/machine/machines/' + machine
+var configDir = path.join(process.env.HOME, '/.docker/machine/machines', machine)
 try {
     fs.statSync(configDir)
     console.log('that machine already exists')
@@ -25,14 +26,14 @@ try {
     //ok
 }
 
-var tmp = '/tmp/' + machine + '/'
+var tmp = path.join(os.tmpdir(), machine)
 fse.rmrfSync(tmp)
 
 unzip()
 processConfig()
 
 util.copyDir(tmp, configDir)
-util.copyDir(tmp + 'certs', process.env.HOME + '/.docker/machine/certs/' + machine)
+util.copyDir(path.join(tmp, 'certs'), path.join(process.env.HOME, '/.docker/machine/certs/', machine))
 // Fix file permissions for id_rsa key, if present
 util.permissions(path.join(configDir, 'id_rsa'), 0600)
 fse.rmrfSync(tmp)
@@ -44,15 +45,15 @@ function unzip() {
     for (var f in zip.files) {
         var file = zip.files[f]
         if (!file.dir) {
-            util.mkdir(path.dirname(tmp + file.name))
-            fs.writeFileSync(tmp + file.name, file.asNodeBuffer())
+            util.mkdir(path.dirname(path.join(tmp, file.name)))
+            fs.writeFileSync(path.join(tmp, file.name), file.asNodeBuffer())
         }
     }
 }
 
 function processConfig() {
     var home = process.env['HOME']
-    var configName = tmp + 'config.json';
+    var configName = path.join(tmp, 'config.json')
     var configFile = fs.readFileSync(configName)
     var config = JSON.parse(configFile.toString())
 
@@ -68,7 +69,7 @@ function processConfig() {
         var driver = JSON.parse(decoded)
 
         // update store path
-        driver.StorePath = process.env.HOME + '/.docker/machine'
+        driver.StorePath = path.join(process.env.HOME, '/.docker/machine')
 
         var updatedBlob = new Buffer(JSON.stringify(driver)).toString('base64')
 
