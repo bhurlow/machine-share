@@ -15,7 +15,7 @@ if (!machine) {
     process.exit(1)
 }
 
-var machine = machine.substring(0, machine.length - 4)
+var machine = path.basename(machine.substring(0, machine.length - 4))
 var configDir = process.env.HOME + '/.docker/machine/machines/' + machine
 try {
     fs.statSync(configDir)
