@@ -15,8 +15,8 @@ if (!machine) {
     process.exit(1)
 }
 
-var machine = path.basename(machine.substring(0, machine.length - 4))
-var configDir = process.env.HOME + '/.docker/machine/machines/' + machine
+var machineName = path.basename(machine.substring(0, machine.length - 4))
+var configDir = process.env.HOME + '/.docker/machine/machines/' + machineName
 try {
     fs.statSync(configDir)
     console.log('that machine already exists')
@@ -25,14 +25,14 @@ try {
     //ok
 }
 
-var tmp = '/tmp/' + machine + '/'
+var tmp = '/tmp/' + machineName + '/'
 fse.rmrfSync(tmp)
 
 unzip()
 processConfig()
 
 util.copyDir(tmp, configDir)
-util.copyDir(tmp + 'certs', process.env.HOME + '/.docker/machine/certs/' + machine)
+util.copyDir(tmp + 'certs', process.env.HOME + '/.docker/machine/certs/' + machineName)
 
 if (fs.existsSync(path.join(configDir, 'id_rsa'))) {
     // Fix file permissions for id_rsa key
