@@ -44,7 +44,7 @@ fse.rmrfSync(tmp)
 
 function unzip() {
     var zip = new require('node-zip')()
-    zip.load(fs.readFileSync(machine + '.zip'))
+    zip.load(fs.readFileSync(machine))
     for (var f in zip.files) {
         var file = zip.files[f]
         if (!file.dir) {
