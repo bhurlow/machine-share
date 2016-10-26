@@ -1,4 +1,5 @@
 var fs = require('fs')
+var mkdirp = require('mkdirp').sync
 
 exports.copy = function (from, to) {
     var file = fs.readFileSync(from)
@@ -6,7 +7,7 @@ exports.copy = function (from, to) {
 }
 
 exports.copyDir = function (from, to) {
-    exports.mkdir(to)
+    mkdir(to)
     var files = fs.readdirSync(from)
     for (var i = 0; i < files.length; i++) {
         var file = from + '/' + files[i]
@@ -16,12 +17,7 @@ exports.copyDir = function (from, to) {
     }
 }
 
-exports.mkdir = function (dir) {
-    try {
-        fs.mkdirSync(dir)
-    } catch (e) {
-    }
-}
+exports.mkdir = mkdirp
 
 exports.startsWith = function (s, prefix) {
     return s.substring(0, prefix.length) === prefix
