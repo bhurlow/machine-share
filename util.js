@@ -7,7 +7,7 @@ exports.copy = function (from, to) {
 }
 
 exports.copyDir = function (from, to) {
-    mkdir(to)
+    mkdirp(to)
     var files = fs.readdirSync(from)
     for (var i = 0; i < files.length; i++) {
         var file = from + '/' + files[i]

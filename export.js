@@ -7,6 +7,7 @@ var path = require('path')
 var os = require('os');
 var fse = require('fs.extra')
 var Zip = require('node-zip')
+var slash = require('slash')
 var util = require('./util')
 
 var DM_CERTS_DIR  = '/.docker/machine/certs/'
@@ -45,6 +46,8 @@ function processConfig() {
                 value = path.join(HOME, DM_CERTS_DIR, machine, name)
             }
             value = value.replace(HOME, '{{HOME}}')
+            // uniform windows/unix paths
+            value = slash(value)
             parent[key] = value
         }
     })
