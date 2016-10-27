@@ -7,6 +7,7 @@
     "machine-import": "import.js"
   },
   "scripts": {
+    "eslint": "eslint *.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -33,5 +34,13 @@
     "node-zip": "^1.1.1",
     "slash": "^1.0.0",
     "tar": "^2.2.1"
-  }
+  },
+  "devDependencies": {
+    "eslint": "^3.8.1",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.3.0",
+    "eslint-plugin-standard": "^2.0.1",
+    "pre-commit": "^1.1.3"
+  },
+  "pre-commit": ["eslint"],
 }
