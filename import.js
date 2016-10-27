@@ -20,7 +20,7 @@ if (!machineArg) {
   process.exit(1)
 }
 
-var machine = machine.substring(0, machineArg.length - 4)
+var machine = machineArg.substring(0, machineArg.length - 4)
 var configDir = path.join(HOME, DM_MACHINE_DIR, machine)
 try {
   fs.statSync(configDir)
