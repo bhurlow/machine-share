@@ -32,11 +32,14 @@ unzip()
 processConfig()
 
 util.copyDir(tmp, configDir)
-util.copyDir(tmp + 'certs', process.env.HOME + '/.docker/machine/certs/' + machineName)
+
+if (fs.existsSync(tmp + 'certs')) {
+  util.copyDir(tmp + 'certs', process.env.HOME + '/.docker/machine/certs/' + machine)
+}
 
 if (fs.existsSync(path.join(configDir, 'id_rsa'))) {
-    // Fix file permissions for id_rsa key
-    fs.chmodSync(path.join(configDir, 'id_rsa'), 0600)
+  // Fix file permissions for id_rsa key
+  fs.chmodSync(path.join(configDir, 'id_rsa'), 0600)
 }
 
 fse.rmrfSync(tmp)
