@@ -1,6 +1,6 @@
 {
   "name": "machine-share",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "share docker machines with friendz",
   "bin": {
     "machine-export": "export.js",
