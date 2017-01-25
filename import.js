@@ -58,7 +58,7 @@ function processConfig () {
   var config = JSON.parse(configFile.toString())
 
   util.recurseJson(config, function (parent, key, value) {
-    if (typeof value === 'string' && value !== '') {
+    if (typeof value === 'string' && value.indexOf('{{HOME}}') > -1) {
       // path.join fixes windows/unix paths
       parent[key] = path.join(value.replace('{{HOME}}', HOME))
     }
