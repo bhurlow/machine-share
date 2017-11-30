@@ -8,7 +8,6 @@ var fse = require('fs.extra')
 var Zip = require('node-zip')
 var slash = require('slash')
 var util = require('./util')
-var mkdirp=require('mkdirp')
 
 var DM_CERTS_DIR = '/.docker/machine/certs/'
 var DM_MACHINE_DIR = '/.docker/machine/machines'
@@ -28,8 +27,7 @@ fse.rmrfSync(tmp)
 
 var configDir = path.join(HOME, DM_MACHINE_DIR, machine)
 util.copyDir(configDir, tmp)
-fs.mkdirSync(path.join(tmp, 'certs')) //merge
-mkdirp.sync(tmp+'certs')
+fs.mkdirSync(path.join(tmp, 'certs'))
 
 processConfig()
 createZip()

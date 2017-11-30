@@ -7,7 +7,6 @@ var os = require('os')
 var fse = require('fs.extra')
 var Zip = require('node-zip')
 var util = require('./util')
-var mkdirp=require('mkdirp')
 
 var DM_CERTS_DIR = '/.docker/machine/certs/'
 var DM_MACHINE_DIR = '/.docker/machine/machines'
@@ -31,7 +30,6 @@ machine = machineArg
 console.log('Using ', machineArg, " as file name")
 
 var configDir = path.join(HOME, DM_MACHINE_DIR, machine)
-//mkdirp.sync(DM_MACHINE_DIR
 try {
   fs.statSync(configDir)
   console.log('that machine already exists')
@@ -56,7 +54,7 @@ function unzip () {
   for (var f in zip.files) {
     var file = zip.files[f]
     if (!file.dir) {
-      util.mkdir(path.dirname(path.join(tmp, file.name))) //mkdirp.sync
+      util.mkdir(path.dirname(path.join(tmp, file.name)))
       fs.writeFileSync(path.join(tmp, file.name), file.asNodeBuffer())
     }
   }
