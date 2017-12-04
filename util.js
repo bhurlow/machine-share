@@ -1,4 +1,6 @@
 var fs = require('fs')
+var path = require('path')
+var os = require('os')
 var mkdirp = require('mkdirp').sync
 
 exports.copy = function (from, to) {
@@ -36,5 +38,22 @@ exports.recurseJson = function (obj, func) {
 exports.permissions = function (path, chmod) {
   try {
     fs.chmodSync(path, chmod)
-  } catch (e) {}
+  } catch (e) {
+  }
+}
+
+var DM_STORAGE_DIR = '/.docker/machine'
+
+exports.cli = function () {
+  var cli = {options: {}, params: []}
+  for (var i = 2; i < process.argv.length; i++) {
+    if (process.argv[i].substring(0, 2) === '--') {
+      cli.options[process.argv[i].substring(2)] = process.argv[i + 1]
+      i++
+    } else {
+      cli.params.push(process.argv[i])
+    }
+  }
+  cli.storagePath = cli.options['storage-path'] || process.env['MACHINE_STORAGE_PATH'] || path.join(os.homedir(), DM_STORAGE_DIR)
+  return cli
 }
