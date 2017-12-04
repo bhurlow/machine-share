@@ -1,5 +1,4 @@
 #! /usr/bin/env node
-console.log('exporting.')
 
 var fs = require('fs')
 var path = require('path')
@@ -9,23 +8,23 @@ var Zip = require('node-zip')
 var slash = require('slash')
 var util = require('./util')
 
-var DM_CERTS_DIR = '/.docker/machine/certs/'
-var DM_MACHINE_DIR = '/.docker/machine/machines'
-var HOME = os.homedir()
+var DM_CERTS_DIR = 'certs'
+var DM_MACHINE_DIR = 'machines'
 var TMP = os.tmpdir()
 
-var args = process.argv.slice(2)
-
-var machine = args[0]
+var cli = util.cli()
+var machine = cli.params[0]
 if (!machine) {
   console.log('machine-export <machine-name>')
   process.exit(1)
 }
 
+console.log('Exporting machine "' + machine + '" from', cli.storagePath)
+
 var tmp = path.join(TMP, machine)
 fse.rmrfSync(tmp)
 
-var configDir = path.join(HOME, DM_MACHINE_DIR, machine)
+var configDir = path.join(cli.storagePath, DM_MACHINE_DIR, machine)
 util.copyDir(configDir, tmp)
 fs.mkdirSync(path.join(tmp, 'certs'))
 
@@ -39,13 +38,13 @@ function processConfig () {
 
   util.recurseJson(config, function (parent, key, value) {
     if (typeof value === 'string') {
-      if (util.startsWith(value, path.join(HOME, DM_CERTS_DIR))) {
+      if (util.startsWith(value, path.join(cli.storagePath, DM_CERTS_DIR, '/'))) {
         var name = path.basename(value)
         util.copy(value, path.join(tmp, 'certs', name))
-        value = path.join(HOME, DM_CERTS_DIR, machine, name)
+        value = path.join(cli.storagePath, DM_CERTS_DIR, machine, name)
       }
-      value = value.replace(HOME, '{{HOME}}')
-            // uniform windows/unix paths
+      value = value.replace(cli.storagePath, '{{STORAGE}}')
+      // uniform windows/unix paths
       value = slash(value)
       parent[key] = value
     }

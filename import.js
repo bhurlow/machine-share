@@ -1,5 +1,4 @@
 #! /usr/bin/env node
-console.log('importing.')
 
 var fs = require('fs')
 var path = require('path')
@@ -8,33 +7,30 @@ var fse = require('fs.extra')
 var Zip = require('node-zip')
 var util = require('./util')
 
-var DM_CERTS_DIR = '/.docker/machine/certs/'
-var DM_MACHINE_DIR = '/.docker/machine/machines'
-var HOME = os.homedir()
+var DM_CERTS_DIR = 'certs'
+var DM_MACHINE_DIR = 'machines'
 var TMP = os.tmpdir()
 
-var args = process.argv.slice(2)
-var machineArg = args[0]
+var cli = util.cli()
+var machineArg = cli.params[0]
 if (!machineArg) {
   console.log('machine-import <config-zip>')
   process.exit(1)
 }
 
 // Make sure command points to a zip or tar file
-var file_type = machineArg.substring(machineArg.length - 4)
-var machine = ""
-if (!file_type.match(/^(.zip|.tar)$/)) {
-  machine = machineArg.substring(0, machineArg.length - 4)
-}
-machine = machineArg
-console.log('Using ', machineArg, " as file name")
+var fileType = machineArg.substring(machineArg.length - 4)
+var machine = fileType.match(/^(.zip|.tar)$/) ? machineArg.substring(0, machineArg.length - 4) : machineArg
 
-var configDir = path.join(HOME, DM_MACHINE_DIR, machine)
+console.log('Importing machine "' + machine + '" into', cli.storagePath)
+
+var configDir = path.join(cli.storagePath, DM_MACHINE_DIR, machine)
 try {
   fs.statSync(configDir)
   console.log('that machine already exists')
   process.exit(1)
-} catch (e) {}
+} catch (e) {
+}
 
 var tmp = path.join(TMP, machine)
 fse.rmrfSync(tmp)
@@ -43,7 +39,7 @@ unzip()
 processConfig()
 
 util.copyDir(tmp, configDir)
-util.copyDir(path.join(tmp, 'certs'), path.join(HOME, DM_CERTS_DIR, machine))
+util.copyDir(path.join(tmp, 'certs'), path.join(cli.storagePath, DM_CERTS_DIR, machine))
 // Fix file permissions for id_rsa key, if present
 util.permissions(path.join(configDir, 'id_rsa'), '0600')
 fse.rmrfSync(tmp)
@@ -66,9 +62,13 @@ function processConfig () {
   var config = JSON.parse(configFile.toString())
 
   util.recurseJson(config, function (parent, key, value) {
-    if (typeof value === 'string' && value.indexOf('{{HOME}}') > -1) {
-      // path.join fixes windows/unix paths
-      parent[key] = path.join(value.replace('{{HOME}}', HOME))
+    if (typeof value === 'string') {
+      if (value.indexOf('{{HOME}}') >= 0) {
+        parent[key] = path.join(value.replace('{{HOME}}/.docker/machine', cli.storagePath))
+      }
+      if (value.indexOf('{{STORAGE}}') >= 0) {
+        parent[key] = path.join(value.replace('{{STORAGE}}', cli.storagePath))
+      }
     }
   })
 
@@ -77,7 +77,7 @@ function processConfig () {
     var decoded = new Buffer(raw, 'base64').toString()
     var driver = JSON.parse(decoded)
     // update store path
-    driver.StorePath = path.join(HOME, '/.docker/machine')
+    driver.StorePath = cli.storagePath
 
     var updatedBlob = new Buffer(JSON.stringify(driver)).toString('base64')
     // update old config
