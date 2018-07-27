@@ -21,13 +21,13 @@ if (!machineArg) {
 }
 
 // Make sure command points to a zip or tar file
-var file_type = machineArg.substring(machineArg.length - 4)
-var machine = ""
-if (!file_type.match(/^(.zip|.tar)$/)) {
+var fileType = machineArg.substring(machineArg.length - 4)
+var machine = ''
+if (!fileType.match(/^(.zip|.tar)$/)) {
   machine = machineArg.substring(0, machineArg.length - 4)
 }
 machine = machineArg
-console.log('Using ', machineArg, " as file name")
+console.log('Using ', machineArg, ' as file name')
 
 var configDir = path.join(HOME, DM_MACHINE_DIR, machine)
 try {
